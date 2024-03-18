@@ -1,0 +1,15 @@
+name: logstash-tester
+
+services:
+  log-generator:
+    image: mingrammer/flog
+    command: ["flog", "--type", "log", "--output", "/log/generated.log", "--overwrite", "--delay", "1s", "-l"]
+    volumes:
+      - ./log:/log
+
+  logstash:
+    image: logstash:8.12.2
+    command: ["logstash", "-f", "/etc/logstash/conf.d/logstash.conf"]
+    volumes:
+      - ./log:/log
+      - ./logstash.conf:/etc/logstash/conf.d/logstash.conf
